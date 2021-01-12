@@ -3,6 +3,7 @@ import express from 'express';
 import moviesRouter from './api/movies';
 import usersRouter from './api/users';
 import genresRouter from './api/genres';
+
 import bodyParser from 'body-parser';
 import './db';
 import {loadUsers, loadMovies} from './seedData';
@@ -45,9 +46,10 @@ app.use(session({
 }));
 
 // Add passport.authenticate(..)  to middleware stack for protected routes​
-app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
+//app.use('/api/movies', passport.authenticate('jwt', {session: false}), moviesRouter);
 app.use('/api/users', usersRouter);
 app.use('/api/genres', genresRouter);
+app.use('/api/movies', moviesRouter);
 
 
 app.use(errHandler);

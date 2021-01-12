@@ -35,6 +35,19 @@ MovieSchema.statics.findByMovieDBId = function (id) {
   return this.findOne({ id: id });
 };
 
+MovieSchema.statics.upComing = function () {
+  return this.find().sort({release_date: -1});
+};
+
+MovieSchema.statics.topRated = function () {
+  return this.find().sort({vote_average: -1});
+};
+
+MovieSchema.statics.trending = function () {
+  return this.find().sort({popularity: -1});
+};
+
+
 export default mongoose.model('Movies', MovieSchema);
 
 
