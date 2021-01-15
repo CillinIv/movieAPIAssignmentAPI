@@ -2,19 +2,10 @@ import userModel from '../api/users/userModel';
 import movieModel from '../api/movies/movieModel';
 import {movies} from './movies.js';
 
-const users = [];
+const users = [
+];
 
-// deletes all user documents in collection and inserts test data
-export async function loadUsers() {
-  console.log('load user Data');
-    try {
-      await userModel.deleteMany();
-      await users.forEach(user => userModel.create(user));
-      console.info(`${users.length} users were successfully stored.`);
-    } catch (err) {
-      console.error(`failed to Load user Data: ${err}`);
-    }
-  }
+
 
   // deletes all movies documents in collection and inserts test data
 export async function loadMovies() {
@@ -28,3 +19,16 @@ export async function loadMovies() {
     console.error(`failed to Load movie Data: ${err}`);
   }
 }
+
+// deletes all user documents in collection and inserts test data
+export async function loadUsers() {
+  userModel.deleteMany();
+  console.log('load user Data');
+    try {
+      await userModel.deleteMany();
+      await users.forEach(user => userModel.create(user));
+      console.info(`${users.length} users were successfully stored.`);
+    } catch (err) {
+      console.error(`failed to Load user Data: ${err}`);
+    }
+  }

@@ -22,7 +22,7 @@ export const movies = [
     {
         "adult": false,
         "backdrop_path": "/vam9VHLZl8tqNwkp1zjEAxIOrkk.jpg",
-        "genre_ids": [
+        "genre_ids": [ 
             10751,
             14,
             10770

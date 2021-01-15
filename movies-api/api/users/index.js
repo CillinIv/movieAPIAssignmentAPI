@@ -1,6 +1,7 @@
 import express from 'express';
 import User from './userModel';
 import jwt from 'jsonwebtoken';
+import movieModel from '../movies/movieModel.js'
 
 const router = express.Router(); // eslint-disable-line
 
@@ -19,9 +20,9 @@ router.post('/', async (req, res, next) => {
   }
 
   if (req.query.action === 'register') {
-
+    
     if(/^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{5,}$/.test(req.body.password)){
-
+      console.log("in the register");
       await User.create(req.body).catch(next);
 
       res.status(201).json({
@@ -59,7 +60,7 @@ router.post('/', async (req, res, next) => {
 });
 
 // Update a user
-router.put('/:id',  (req, res) => {
+router.put('/:id',  (req, res, next) => {
     if (req.body._id) delete req.body._id;
      User.update({
       _id: req.params.id,
@@ -69,30 +70,30 @@ router.put('/:id',  (req, res) => {
     .then(user => res.json(200, user)).catch(next);
 });
 
-//Add a favourite. No Error Handling Yet. Can add duplicates too!
+//Add a favourite.
 router.post('/:userName/favourites', async (req, res, next) => {
-  const userName = req.params.userName;
+  try{
   const newFavourite = req.body.id;
+  const userName = req.params.userName;
   const movie = await movieModel.findByMovieDBId(newFavourite);
-
-  const movie2 = await user.favourites.findByMovieDBId(newFavourite);
-
-  if(movie2 != movie){
-    await user.favourites.push(movie._id);
-  }
-
   const user = await User.findByUserName(userName);
-  
-  await user.save(); 
-  res.status(201).json(user).catch(next);
+  if(!user.favourites.includes(movie._id)){
+    await user.favourites.push(movie._id);
+    await user.save(); 
+    res.status(201).json(user); 
+  }else{
+    console.log("Movie already is in favourites")
+  }
+  }catch(err){
+    console.log("Error adding movies to favourites : ",{err})
+  }
 });
-  
+
+//Get favourites
 router.get('/:userName/favourites', (req, res, next) => {
   const userName = req.params.userName;
   User.findByUserName(userName).populate('favourites').then(
     user => res.status(201).json(user.favourites)
   ).catch(next);
 });
-
-
 export default router;
